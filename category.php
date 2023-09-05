@@ -32,13 +32,13 @@ if ($result) {
         if($_SESSION['category_action_status'] == "Success"){
             ?>
             <div class="alert alert-success alert-dismissable" ng-if="messageInfo">
-                Message
+                <?php echo $_SESSION['category_alert']; ?>
             </div>
             <?php
         }else{
             ?>
             <div class="alert alert-danger alert-dismissable" ng-if="messageInfo">
-                Message
+                <?php echo $_SESSION['category_alert']; ?>
             </div>
             <?php
         }
@@ -73,8 +73,8 @@ if ($result) {
                         <td><?php echo $category['id'];?></td>
                         <td><?php echo $category['name'];?></td>
                         <td><?php echo $category['description'];?></td>
-                        <td><button type="button" class=" btn btn-info" data-toggle="modal" data-target="#modaledit" ng-click="selectUser(user)">Edit</button></td>
-                        <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldelete" ng-click="selectUser(user)">Delete</button></td>
+                        <td><button type="button" class=" btn btn-info" data-toggle="modal" data-target="#modaledit" onclick="categoryEdit('<?php echo $category['id'];?>','<?php echo $category['name'];?>','<?php echo $category['description'];?>')">Edit</button></td>
+                        <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldelete" onclick="categoryDelete('<?php echo $category['id'];?>','<?php echo $category['name'];?>','<?php echo $category['description'];?>')">Delete</button></td>
                     </tr>
                     <?php
                 }
@@ -124,36 +124,34 @@ if ($result) {
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Edit Record</h4>
+				<h4 class="modal-title">Edit Category</h4>
 			</div>
 			<div class="modal-body">
-				<form class="form-horizontal">
+				<form class="form-horizontal" method="POST" >
 					<div class="form-group">
-						<label class="control-label col-md-2">Username</label>
+						<label class="control-label col-md-2">Category Name</label>
 						<div class="col-md-10">
-							<input type="text" class="form-control" ng-model="clickedUser.username">
+							<input type="text" class="form-control" required name="categoryName_edit" id="categoryName_edit">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label class="control-label col-md-2">Full Name</label>
+						<label class="control-label col-md-2">Category Description</label>
 						<div class="col-md-10">
-							<input type="text" class=" form-control" ng-model="clickedUser.fullname">
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-md-2">Email</label>
-						<div class="col-md-10">
-							<input type="email" class=" form-control"  ng-model="clickedUser.email">
+							<input type="text" class=" form-control" required name="categoryDescription_edit" id="categoryDescription_edit">
 						</div>
 					</div>
 
 					<div class="form-group">
 						<div class="col-md-2 col-md-offset-2">
-							<button type="submit" class="btn btn-info " ng-click="updateUser()" data-dismiss="modal">Update</button>
+							<button type="button" class="btn btn-info " onclick="updateCategory()">Update</button>
 						</div>
 					</div>
+
+                    <!-- hidden input field for saving the selected category ID -->
+                    <input type="text" hidden name="selected_category_id_update" required id="selected_category_id_update">
+                    <input type="submit" hidden name="editCategorySubmit" id="editCategorySubmit">
+
 				</form>
 			</div>
 			<div class="modal-footer">
@@ -169,12 +167,15 @@ if ($result) {
 				<h4 class="modal-title">Are you sure?</h4>
 			</div>
 			<div class="modal-body">
-				<strong style="color:red;">You are going to delete {{clickedUser.username}}</strong>
+				<strong style="color:red;" id="deleteText"></strong>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-info " data-dismiss="modal" ng-click="deleteUser()">Yes</button> 
+                <form method="POST">
+                    <input type="text" hidden required name="deleteCategory_Id" id="deleteCategory_Id">
+                    <input type="submit" hidden name="deleteCategorySubmit" id="deleteCategorySubmit">
+                </form>
+				<button type="button" class="btn btn-info " onclick="deleteCategorySubmitClick()">Yes</button> 
 				<button type="button" class="btn btn-info " data-dismiss="modal" >No</button>		
-	
 			</div>
 		</div>
 	</div>
@@ -200,7 +201,7 @@ if(isset($_POST['addCategory'])){
 
     if($stmt->execute()){
         //success
-        $_SESSION['category_alert'] = "Category Added Successfully!";
+        $_SESSION['category_alert'] = "Category {".$name."} Added Successfully!";
         $_SESSION['category_action_status'] = "Success";
     } else {
         //failed
@@ -213,6 +214,64 @@ if(isset($_POST['addCategory'])){
         ?>
     <script>
     window.location.replace("category.php");
+    </script>
+    <?php
+}
+
+
+
+if(isset($_POST['editCategorySubmit'])){
+    $name = $_POST['categoryName_edit'];
+    $description = $_POST['categoryDescription_edit'];
+    $id = $_POST['selected_category_id_update'];
+
+    $sql = "UPDATE category SET name = ?, description = ? WHERE id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("ssi", $name, $description, $id);
+
+    if($stmt->execute()){
+        //success
+        $_SESSION['category_alert'] = "Category {".$name."} Updated Successfully!";
+        $_SESSION['category_action_status'] = "Success";
+    } else {
+        //failed
+        $_SESSION['category_alert'] = "Failed to Update the Category!";
+        $_SESSION['category_action_status'] = "Failed";
+    }
+    $stmt->close();
+    $con->close();
+
+        ?>
+    <script>
+        window.location.replace("category.php");
+    </script>
+    <?php
+}
+
+
+
+if(isset($_POST['deleteCategorySubmit'])){
+    $id = $_POST['deleteCategory_Id'];
+
+    $sql = "DELETE FROM category WHERE id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $id);
+
+    if($stmt->execute()){
+        //success
+        $_SESSION['category_alert'] = "Category Deleted Successfully!";
+        $_SESSION['category_action_status'] = "Success";
+    } else {
+        //failed
+        $_SESSION['category_alert'] = "Failed to Delete the Category!";
+        $_SESSION['category_action_status'] = "Failed";
+    }
+    $stmt->close();
+    $con->close();
+
+        ?>
+    <script>
+        window.location.replace("category.php");
     </script>
     <?php
 }

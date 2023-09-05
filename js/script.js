@@ -23,3 +23,24 @@ function submitCategory(){
 function saveCategory(){
     document.getElementById("addCategory").click();
 }
+
+
+function categoryEdit(id,name,description){
+    document.getElementById("categoryName_edit").value = name;
+    document.getElementById("categoryDescription_edit").value = description;
+    document.getElementById("selected_category_id_update").value = id;
+}
+
+function updateCategory(){
+    document.getElementById("editCategorySubmit").click();
+}
+
+
+function categoryDelete(id,name,description){
+    document.getElementById("deleteText").innerText = `You are going to delete CATEGORY : {${name}}`;
+    document.getElementById("deleteCategory_Id").value = id;
+}
+
+function deleteCategorySubmitClick(){
+    document.getElementById("deleteCategorySubmit").click();
+}
