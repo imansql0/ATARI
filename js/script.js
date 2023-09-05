@@ -18,6 +18,8 @@ function userLogout(){
 }
 function submitCategory(){
     document.getElementById("submit").click();
-   
-    
+}
+
+function saveCategory(){
+    document.getElementById("addCategory").click();
 }
