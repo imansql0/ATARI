@@ -46,7 +46,7 @@ if(isset($_SESSION['user_key'])){
 <body class="loginMain">
 
     <div class="mainImageContainer">
-        <img src="img/img1.jpg" alt="">
+        <img src="img/12.jpg" alt="">
     </div>
 
     <div class="mainlogincontainer">

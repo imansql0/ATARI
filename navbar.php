@@ -47,8 +47,8 @@ if(isset($_SESSION['user_key'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/style.css?v=2">
-    <script src="js/script.js?v=2.1"></script>
+    <link rel="stylesheet" href="css/style.css?v=3">
+    <script src="js/script.js?v=2.6"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     	
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -82,7 +82,7 @@ if(isset($_SESSION['user_key'])){
 
     <div class="navelcon">
         <div class="logoContainer">
-            <img src="img/img1.jpg" alt="">
+            <img src="img/wizard.jpg" alt="">
             
         </div>
         <?php
@@ -109,17 +109,17 @@ if(isset($_SESSION['user_key'])){
         ?>
 
         <?php
-            if($selectedNav == "history"){?>
-                <div class="navEle selected" onclick="systemadminnavclick('history')">History</div>
+            if($selectedNav == "orders"){?>
+                <div class="navEle selected" onclick="systemadminnavclick('orders')">Orders</div>
             <?php }else{ ?>
-                <div class="navEle" onclick="systemadminnavclick('history')">History</div>
+                <div class="navEle" onclick="systemadminnavclick('orders')">Orders</div>
             <?php }
         ?>
          <?php
-            if($selectedNav == ""){?>
-                <div class="navEle selected" onclick="systemadminnavclick('')">Dashboard</div>
+            if($selectedNav == "userlist"){?>
+                <div class="navEle selected" onclick="systemadminnavclick('userlist')">Users</div>
             <?php }else{ ?>
-                <div class="navEle" onclick="systemadminnavclick('')">Dashboard</div>
+                <div class="navEle" onclick="systemadminnavclick('userlist')">Users</div>
             <?php }
         ?>
           
@@ -145,7 +145,7 @@ if(isset($_SESSION['user_key'])){
             </div>
             <div class="cnp_txt_cn">
                
-                <h6><?php echo $username; ?></h6>
+                <h4><?php echo $username; ?></h4>
                 
                 <div class="formElement formButton">
            <form method="post">

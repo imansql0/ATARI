@@ -1,12 +1,12 @@
 <?php
 include("config/config.php");
 session_start();
-$_SESSION['navId'] = "product";
+$_SESSION['navId'] = "userlist";
 include("navbar.php");
 
 
 $categories = array();
-$sql = "SELECT * FROM product";
+$sql = "SELECT * FROM users";
 $result = mysqli_query($con, $sql);
 if ($result) {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -20,7 +20,7 @@ if ($result) {
 <div class="container">
 	<hr>
 	<button class="btn btn-info btn-lg pull-right" type="button" data-toggle="modal" data-target="#modalAdd">Add New</button>
-	<h1>All Products</h1>
+	<h1>All Users</h1>
 	<span class="clearfix"></span>
 	<hr>
 
@@ -57,12 +57,10 @@ if ($result) {
 			<thead>
 				<tr class="info">
 					<th>ID</th>
-					<th>ItemCode</th>
-					<th>Name</th>
-					<th>Quantity</th>
-					<th>Stock</th>
-					<th>Price</th>
-					<th>Profit</th>
+					<th>UserType</th>
+					<th>Username</th>
+					<th>Password</th>
+					<th>Userkey</th>
 					<th>Edit</th>
 					<th>Delete</th>
 				</tr>
@@ -74,15 +72,13 @@ if ($result) {
                     ?>
                     
                     <tr ng-repeat="user in users">
-                        <td><?php echo $category['ID'];?></td>
-                        <td><?php echo $category['ItemCode'];?></td>
-                        <td><?php echo $category['Name'];?></td>
-						<td><?php echo $category['Quantity'];?></td>
-                        <td><?php echo $category['Stock'];?></td>
-                        <td><?php echo $category['Price'];?></td>
-						<td><?php echo $category['Profit'];?></td>
-                        <td><button type="button" class=" btn btn-info" data-toggle="modal" data-target="#modaledit" onclick="productEdit('<?php echo $category['ID'];?>','<?php echo $category['ItemCode'];?>','<?php echo $category['Name'];?>','<?php echo $category['Quantity'];?>','<?php echo $category['Stock'];?>','<?php echo $category['Price'];?>','<?php echo $category['Profit'];?>')">Edit</button></td>
-                        <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldelete" onclick="ProductDelete('<?php echo $category['ID'];?>','<?php echo $category['ItemCode'];?>','<?php echo $category['Name'];?>','<?php echo $category['Quantity'];?>','<?php echo $category['Stock'];?>','<?php echo $category['Price'];?>','<?php echo $category['Profit'];?>')">Delete</button></td>
+                        <td><?php echo $category['id'];?></td>
+                        <td><?php echo $category['usertype'];?></td>
+                        <td><?php echo $category['username'];?></td>
+						<td><?php echo $category['password'];?></td>
+                        <td><?php echo $category['user_key'];?></td>
+                        <td><button type="button" class=" btn btn-info" data-toggle="modal" data-target="#modaledit" onclick="userEdit('<?php echo $category['id'];?>','<?php echo $category['usertype'];?>','<?php echo $category['username'];?>','<?php echo $category['password'];?>','<?php echo $category['user_key'];?>')">Edit</button></td>
+                        <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldelete" onclick="userDelete('<?php echo $category['id'];?>','<?php echo $category['usertype'];?>','<?php echo $category['username'];?>','<?php echo $category['password'];?>','<?php echo $category['user_key'];?>')">Delete</button></td>
                     </tr>
                     <?php
                 }
@@ -102,40 +98,27 @@ if ($result) {
 				<form class="form-horizontal" method="POST">
 					
 					<div class="form-group">
-						<label class="control-label col-md-2">Product ItemCode</label>
+						<label class="control-label col-md-2">User type</label>
 						<div class="col-md-10">
-							<input type="text" class="form-control" required name="ProductItemCode">
+							<input type="text" class="form-control" required name="usertype">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-md-2">Product Name</label>
+						<label class="control-label col-md-2">Username</label>
 						<div class="col-md-10">
-							<input type="text" class="form-control" required name="ProductName">
+							<input type="text" class="form-control" required name="username">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-md-2">Product Quantity</label>
+						<label class="control-label col-md-2">Password</label>
 						<div class="col-md-10">
-							<input type="text" class="form-control" required name="ProductQuantity">
+							<input type="text" class="form-control" required name="password">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-md-2">Product Stock</label>
+						<label class="control-label col-md-2">User key</label>
 						<div class="col-md-10">
-							<input type="text" class="form-control" required name="ProductStock">
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-md-2">Product Price</label>
-						<div class="col-md-10">
-							<input type="text" class=" form-control" required name="ProductPrice">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-md-2">Product Profit</label>
-						<div class="col-md-10">
-							<input type="text" class=" form-control" required name="ProductProfit">
+							<input type="text" class="form-control" required name="userkey">
 						</div>
 					</div>
 
@@ -162,52 +145,41 @@ if ($result) {
 			<div class="modal-body">
 				<form class="form-horizontal" method="POST" >
 					<div class="form-group">
-						<label class="control-label col-md-2">ProductItemCode</label>
+						<label class="control-label col-md-2">User type</label>
 						<div class="col-md-10">
-							<input type="text" class="form-control" required name="ProductItemCode_edit" id="ProductItemCode_edit">
+							<input type="text" class="form-control" required name="usertypeedit" id="usertypeedit">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label class="control-label col-md-2">ProductName</label>
+						<label class="control-label col-md-2">Username</label>
 						<div class="col-md-10">
-							<input type="text" class=" form-control" required name="ProductName_edit" id="ProductName_edit">
+							<input type="text" class=" form-control" required name="usernameedit" id="usernameedit">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-md-2">ProductQuantity</label>
+						<label class="control-label col-md-2">Password</label>
 						<div class="col-md-10">
-							<input type="text" class=" form-control" required name="ProductQuantity" id="ProductQuantity_edit">
+							<input type="text" class=" form-control" required name="passwordedit" id="passwordedit">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-md-2">ProductStock</label>
+						<label class="control-label col-md-2">User key</label>
 						<div class="col-md-10">
-							<input type="text" class=" form-control" required name="ProductStock_edit" id="ProductStock_edit">
+							<input type="text" class=" form-control" required name="userkeyedit" id="userkeyedit">
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="control-label col-md-2">ProductPrice</label>
-						<div class="col-md-10">
-							<input type="text" class=" form-control" required name="ProductPrice_edit" id="ProductPrice_edit">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-md-2">ProductProfit</label>
-						<div class="col-md-10">
-							<input type="text" class=" form-control" required name="ProductProfit_edit" id="ProductProfit_edit">
-						</div>
-					</div>
+				
 
 					<div class="form-group">
 						<div class="col-md-2 col-md-offset-2">
-							<button type="button" class="btn btn-info " onclick="updateProduct()">Update</button>
+							<button type="button" class="btn btn-info " onclick="updateuser()">Update</button>
 						</div>
 					</div>
 
                     <!-- hidden input field for saving the selected category ID -->
-                    <input type="text" hidden name="selected_category_id_update" required id="selected_category_id_update">
-                    <input type="submit" hidden name="editCategorySubmit" id="editCategorySubmit">
+                    <input type="text"   hidden name="selected_category_id_update" required id="selected_category_id_update">
+                    <input type="submit"   hidden name="editCategorySubmit" id="editCategorySubmit">
 
 				</form>
 			</div>
@@ -250,24 +222,23 @@ include("footer.php");
 
 if(isset($_POST['addCategory'])){
     
-    $PItemCode = $_POST['ProductItemCode'];
-	$PName = $_POST['ProductName'];
-	$PQuantity = $_POST['ProductQuantity'];
-	$Pstock = $_POST['ProductStock'];
-	$PPrice = $_POST['ProductPrice'];
-	$PProfit = $_POST['ProductProfit'];
+    $usertype = $_POST['usertype'];
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$userkey = $_POST['userkey'];
 
-    $sql = "INSERT INTO product (ItemCode, Name, Quantity, Stock, Price, Profit ) VALUES (?, ?, ?, ?, ?, ?)";
+
+    $sql = "INSERT INTO users (usertype, username, password, user_key) VALUES ( ?, ?, ?, ?)";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("iiiiii",$PItemCode, $PName, $PQuantity, $Pstock, $PPrice, $PProfit);
+    $stmt->bind_param("ssss",$usertype, $username, $password, $userkey);
 
     if($stmt->execute()){
         //success
-        $_SESSION['category_alert'] = "Product {".$PName."} Added Successfully!";
+        $_SESSION['category_alert'] = "User {".$username."} Added Successfully!";
         $_SESSION['category_action_status'] = "Success";
     } else {
         //failed
-        $_SESSION['category_alert'] = "Failed to add the Product!";
+        $_SESSION['category_alert'] = "Failed to add the User!";
         $_SESSION['category_action_status'] = "Failed";
     }
     $stmt->close();
@@ -275,7 +246,7 @@ if(isset($_POST['addCategory'])){
 
         ?>
     <script>
-    window.location.replace("product.php");
+    window.location.replace("userlist.php");
     </script>
     <?php
 }
@@ -283,25 +254,23 @@ if(isset($_POST['addCategory'])){
 
 
 if(isset($_POST['editCategorySubmit'])){
-    $PItemCode = $_POST['ProductItemCode_edit'];
-	$PName = $_POST['ProductName_edit'];
-	$PQuantity = $_POST['ProductQuantity_edit'];
-	$Pstock = $_POST['ProductStock_edit'];
-	$PPrice = $_POST['ProductPrice_edit'];
-	$PProfit = $_POST['ProductProfit_edit'];
+    $usertype = $_POST['usertypeedit'];
+	$username = $_POST['usernameedit'];
+	$password = $_POST['passwordedit'];
+	$userkey = $_POST['userkeyedit'];
     $id = $_POST['selected_category_id_update'];
 
-    $sql = "UPDATE product SET ItemCode = ?, Name = ?, Quantity = ? , Stock = ?, Price = ?, Profit = ? WHERE ID = ?";
+    $sql = "UPDATE users SET usertype = ?, username = ?, password = ? , user_key = ? WHERE id = ?";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("iiiiiii", $PItemCode, $PName, $PQuantity, $Pstock, $PPrice, $PProfit, $id);
+    $stmt->bind_param("ssssi",$usertype, $username, $password, $userkey,$id);
 
     if($stmt->execute()){
         //success
-        $_SESSION['category_alert'] = "Product {".$PName."} Updated Successfully!";
+        $_SESSION['category_alert'] = "User {".$username."} Updated Successfully!";
         $_SESSION['category_action_status'] = "Success";
     } else {
         //failed
-        $_SESSION['category_alert'] = "Failed to Update the Product!";
+        $_SESSION['category_alert'] = "Failed to Update the User!";
         $_SESSION['category_action_status'] = "Failed";
     }
     $stmt->close();
@@ -309,7 +278,7 @@ if(isset($_POST['editCategorySubmit'])){
 
         ?>
     <script>
-        window.location.replace("product.php");
+        window.location.replace("userlist.php");
     </script>
     <?php
 }
@@ -318,17 +287,17 @@ if(isset($_POST['editCategorySubmit'])){
 if(isset($_POST['deleteCategorySubmit'])){
     $id = $_POST['deleteCategory_Id'];
 
-    $sql = "DELETE FROM product WHERE ID = ?";
+    $sql = "DELETE FROM users WHERE id = ?";
     $stmt = $con->prepare($sql);
     $stmt->bind_param("i", $id);
 
     if($stmt->execute()){
         //success
-        $_SESSION['category_alert'] = "Product Deleted Successfully!";
+        $_SESSION['category_alert'] = "User Deleted Successfully!";
         $_SESSION['category_action_status'] = "Success";
     } else {
         //failed
-        $_SESSION['category_alert'] = "Failed to Delete the Product!";
+        $_SESSION['category_alert'] = "Failed to Delete the User!";
         $_SESSION['category_action_status'] = "Failed";
     }
     $stmt->close();
@@ -336,7 +305,7 @@ if(isset($_POST['deleteCategorySubmit'])){
 
         ?>
     <script>
-        window.location.replace("product.php");
+        window.location.replace("userlist.php");
     </script>
     <?php
 }
